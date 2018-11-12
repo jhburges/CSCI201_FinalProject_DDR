@@ -1,4 +1,4 @@
-//The overall game object, contains all of the game information, setup, state, etc.
+//The overall DDR game object, contains all of the game information, setup, state, etc.
 PlayState = {};
 /* --------------------------------------------------- */
 var last_spawn_time;
@@ -11,6 +11,7 @@ function checkPoint_LEFT(game, x, y) {
 	this.anchor.set(0.5);
 	//Enable physics for the sprite body
 	this.game.physics.enable(this);
+	
 }
 //Inherit from Phaser.sprite
 checkPoint_LEFT.prototype = Object.create(Phaser.Sprite.prototype);
@@ -74,56 +75,33 @@ checkPoint_DOWN.prototype.update = function() {
 }
 /* --------------------------------------------------- */
 
+
+/* --------------------------------------------------- */
+
 //Initializes game functionality (called before any other game phase)
 PlayState.init = function() {
-	//Tweaking the renderer so that it rounds position values to integers when drawing images (ie. 100.27 --> 100); optional graphics fix
-	this.game.renderer.renderSession.roundPixels = true;
 	//Adds checks for keyboard state
 	this.keys = this.game.input.keyboard.addKeys( {
 		left: Phaser.KeyCode.LEFT,
 		right: Phaser.KeyCode.RIGHT,
 		up: Phaser.KeyCode.UP,
-		down: Phaser.KeyCode.DOWN
+		down: Phaser.KeyCode.DOWN,
+		esc: Phaser.KeyCode.ESC
 	});
-		
+	
+	//Variable keeping track of whether we are spawning arrows
+	this.allowSpawns = true;
 	//Variable keeping track of the player score, initialized to zero
 	this.score = 0;
 	
-	//Random time between 1 and 2 seconds
-	time_til_spawn = Math.random()*500 + 500;
+	//Buffer time (milliseconds) before arrows start spawning
+	time_til_spawn = 2000;
 	last_spawn_time = this.game.time.time;
 
 };
 
 /* --------------------------------------------------- */
 
-//Load game assets here BEFORE GAME START
-PlayState.preload = function() {
-	//Load the level data for storage
-	this.game.load.json('level:1', 'data/ddr.json');
-	//Load background image for storage
-	this.game.load.image('background', 'images/background.png');
-	//Load audio assets
-	this.game.load.audio('sfx:jump', 'audio/jump.wav');
-	this.game.load.audio('sfx:coin', 'audio/coin.wav');
-	this.game.load.audio('sfx:stomp', 'audio/stomp.wav');
-	this.game.load.audio('sfx:full_moon', 'audio/fullmoon.mp3');
-	//Load a spritesheet of coins (parameters = image key, file location, dimensions of individual frame)
-	this.game.load.spritesheet('coin', 'images/coin_animated.png', 22, 22);
-	//Load coin icon and numbers for the scoreboard
-	this.game.load.image('icon:coin', 'images/coin_icon.png');
-	this.game.load.image('font:numbers', 'images/numbers.png');	
-	//Load arrow images
-	this.game.load.image('arrow_left', 'images/left.png');
-	this.game.load.image('arrow_right', 'images/right.png');
-	this.game.load.image('arrow_up', 'images/up.png');
-	this.game.load.image('arrow_down', 'images/down.png');
-	//Load checkpoint images
-	this.game.load.image('LEFT', 'images/checkpoint_left.png');
-	this.game.load.image('RIGHT', 'images/checkpoint_right.png');
-	this.game.load.image('UP', 'images/checkpoint_up.png');
-	this.game.load.image('DOWN', 'images/checkpoint_down.png');
-};
 
 /* --------------------------------------------------- */
 
@@ -134,20 +112,70 @@ PlayState.create = function() {
 	
 	//Level-loading function: parameter = json file describing the level objects
 	this._loadLevel(this.game.cache.getJSON('level:1'));
-	//Add sound entities to the game
+	//Add sound entities into the game after they've been loaded
 	this.sfx = {
 		jump: this.game.add.audio('sfx:jump'),
 		coin: this.game.add.audio('sfx:coin'),
 		stomp: this.game.add.audio('sfx:stomp'),
-		full_moon: this.game.add.audio('sfx:full_moon')
+		full_moon: this.game.add.audio('sfx:full_moon'),
+		troublemaker: this.game.add.audio('sfx:troublemaker'),
+		attention: this.game.add.audio('sfx:attention'),
+		now: this.game.add.audio('sfx:now'),
+		this_guy: this.game.add.audio('sfx:this_guy')
 	};
 	
-	const curr_song = "full_moon";
-	//this.sfx.curr_song.play();
+	//Check which song should be played, then play it
+	var curr_song;
+	if(this.game.global.songstring == 'this_guy') {
+		curr_song = this.sfx.this_guy;
+	}
+	else if(this.game.global.songstring == 'attention') {
+		curr_song = this.sfx.attention;
+	}
+	else if(this.game.global.songstring == 'full_moon') {
+		curr_song = this.sfx.full_moon;
+	}
+	else if(this.game.global.songstring == 'troublemaker') {
+		curr_song = this.sfx.troublemaker;
+	}
+	else if(this.game.global.songstring == 'now') {
+		curr_song = this.sfx.now;
+	}
+	curr_song.play();
+	
+	
+	//Set a timer for 2 seconds before the song end; will stop arrow spawns at end
+	var song_time = this.game.global.songtime;
+	this.timer = this.game.time.create(false);
+	this.timer.loop(song_time, this.updateCounter, this);
+	this.timer.start();
+	
+	//Code addresses the logic that happens after the song finishes
+	curr_song.onStop.addOnce(function() {
+		
+		//Updates the max_score variable if the current game score is greater
+		if(this.game.global.max_score < this.score) {
+			this.game.global.max_score = this.score;
+		}
+		/* --------------------------------------------------- */
+		//Put a function here that sends the score/max_score to the backend
+		/* --------------------------------------------------- */
+		
+		//Changes the game state to the menu state
+		this.game.state.start('menu');
+		
+	}, this);
+	
 	this._createHud();
 	
 };
 
+
+PlayState.updateCounter = function() {
+    
+    this.allowSpawns = false;
+  
+}
 /* --------------------------------------------------- */
 
 //Level-loading function
@@ -166,6 +194,15 @@ PlayState._loadLevel = function(data) {
 	//Create a group of DOWN arrows
 	this.arrows_down = this.game.add.group();
 	
+	//Create a group of PERFECT indicators
+	this.perfect_indicator = this.game.add.group();
+	//Create a group of GOOD indicators
+	this.good_indicator = this.game.add.group();
+	//Create a group of OKAY indicators
+	this.okay_indicator = this.game.add.group();
+	//Create a group of POOR indicators
+	this.poor_indicator = this.game.add.group();
+	
 	//Establish the leading edges for each input key (the first time a key is pressed; accounts for game logic when a user holds down a key)
 	this.leadingEdgeLeft = true;
 	this.leadingEdgeRight = true;
@@ -176,6 +213,7 @@ PlayState._loadLevel = function(data) {
 
 /* --------------------------------------------------- */
 
+//Object spawn helper functions
 PlayState._spawnCheckPoints = function(data) {
 	
 	//Create the checkpoint objects using data from 'data', then add them to the game
@@ -194,14 +232,10 @@ PlayState._spawnCheckPoints = function(data) {
 };
 
 PlayState._spawnArrow = function() {
-	console.log(this.arrows_left.length);
-	console.log(this.arrows_right.length);
-	console.log(this.arrows_up.length);
-	console.log(this.arrows_down.length);
+	
 	const ARROWSPEED = 350;
-	const DIFFICULTY = 1;
 	//Return a value 1 through 4, inclusive; the # of arrows spawned in a given frame
-	var spawnCount = Math.floor(Math.random()*DIFFICULTY) +1;
+	var spawnCount = Math.floor(Math.random()*(this.game.global.difficulty)) +1;
 	
 	//Keeps track of the arrow(s) spawned
 	var arrows = [];
@@ -304,7 +338,67 @@ PlayState._createHud = function () {
     this.hud.add(coinIcon);
     this.hud.add(coinScoreImg);
     //Set hud position at 10, 10; this is the centerpoint from which objects in the group are based off of
-    this.hud.position.set(10, 10);
+    this.hud.position.set(10, 550);
+};
+
+//Add an indicator to the game
+PlayState._createPerfectIndicator = function(checkpoint) {
+	let sprite = this.perfect_indicator.create(checkpoint.x, checkpoint.y+150, 'perfect');
+	
+	sprite.anchor.set(0.5, 0.5);
+	
+	sprite.game.physics.enable(sprite);
+	sprite.body.allowGravity = true;
+	
+	sprite.animations.add('perfect_appear', [0, 1, 2, 3, 4], 12, false);
+	sprite.animations.play('perfect_appear').onComplete.addOnce(function() {
+		sprite.destroy();
+	}, this);
+	
+	
+};
+
+PlayState._createGoodIndicator = function(checkpoint) {
+	let sprite = this.good_indicator.create(checkpoint.x, checkpoint.y+150, 'good');
+	
+	sprite.anchor.set(0.5, 0.5);
+	
+	sprite.game.physics.enable(sprite);
+	sprite.body.allowGravity = true;
+	
+	sprite.animations.add('good_appear', [0, 1, 2, 3, 4],12, false);
+	sprite.animations.play('good_appear').onComplete.addOnce(function() {
+		sprite.destroy();
+	}, this);
+	
+};
+
+PlayState._createOkayIndicator = function(checkpoint) {
+let sprite = this.okay_indicator.create(checkpoint.x, checkpoint.y+150, 'okay');
+	
+	sprite.anchor.set(0.5, 0.5);
+	
+	sprite.game.physics.enable(sprite);
+	sprite.body.allowGravity = true;
+	
+	sprite.animations.add('okay_appear', [0, 1, 2, 3, 4],12, false);
+	sprite.animations.play('okay_appear').onComplete.addOnce(function() {
+		sprite.destroy();
+	}, this);
+};
+
+PlayState._createPoorIndicator = function(checkpoint) {
+let sprite = this.poor_indicator.create(checkpoint.x, checkpoint.y+150, 'poor');
+	
+	sprite.anchor.set(0.5, 0.5);
+	
+	sprite.game.physics.enable(sprite);
+	sprite.body.allowGravity = true;
+	
+	sprite.animations.add('poor_appear', [0, 1, 2, 3, 4],12, false);
+	sprite.animations.play('poor_appear').onComplete.addOnce(function() {
+		sprite.destroy();
+	}, this);
 };
 /* --------------------------------------------------- */
 
@@ -325,25 +419,28 @@ PlayState._removeFromDownGroup = function() {
 /* --------------------------------------------------- */
 PlayState._decrementScore = function() {
 	this.sfx.stomp.play();
-	this.score--;
+	this.score -= 5;
 }
 /* --------------------------------------------------- */
 
 //Update the status of the game (called automatically during game operation)
 PlayState.update = function() {
+	//this.LEFT.loadTexture('LEFT');
+	//this.RIGHT.loadTexture('RIGHT');
+	//this.UP.loadTexture('UP');
+	//this.DOWN.loadTexture('DOWN');
+	
 	//Perform collision checks between game objects
 	this._handleCollisions();
 	//Process input from the player
-	this._handleInput();
-	
-	
-	
+	this._handleInput();	
 	
 	
 	//Spawn arrows after some time has elapsed
 	var current_time = this.game.time.time;
-	if(current_time - last_spawn_time > time_til_spawn) {
-		time_til_spawn = Math.random()*500 + 500;
+	if(current_time - last_spawn_time > time_til_spawn && this.allowSpawns == true) {
+		//Generate a random amount of time from .3 second to .8 second
+		time_til_spawn = Math.random()*500 + this.game.global.spawntime;
 		last_spawn_time = current_time;
 		this._spawnArrow();
 	}
@@ -361,6 +458,7 @@ PlayState._handleInput = function() {
 		
 		if(overlap == false && this.badinput == true) {
 			this._decrementScore();
+			//this.LEFT.loadTexture('LEFT_RED');
 		}
 	}
 	
@@ -370,6 +468,7 @@ PlayState._handleInput = function() {
 		
 		if(overlap == false && this.badinput == true) {
 			this._decrementScore();
+			//this.RIGHT.loadTexture('RIGHT_RED');
 		}
 	}
 	
@@ -379,6 +478,7 @@ PlayState._handleInput = function() {
 		
 		if(overlap == false && this.badinput == true) {
 			this._decrementScore();
+			//this.UP.loadTexture('UP_RED');
 		}
 	}
 	
@@ -388,8 +488,15 @@ PlayState._handleInput = function() {
 		
 		if(overlap == false && this.badinput == true) {
 			this._decrementScore();
+			//this.DOWN.loadTexture('DOWN_RED');
 		}
 		
+	}
+	
+	if(this.keys.esc.isDown) {
+		this.game.sound.stopAll();
+		this.timer.destroy();
+		this.game.state.start('menu');
 	}
 	
 	if(this.keys.left.isDown == false) {
@@ -432,13 +539,16 @@ PlayState._handleCollisions = function() {
 
 /* --------------------------------------------------- */
 
+//Helper collision functions
 PlayState._onLeftArrowVsCheckPoint = function(LEFT, arrow_left) {
 	//Check for left arrow input from the user
 	if(this.keys.left.isDown && this.leadingEdgeLeft == true) {
 		//Play a correct input sound
 		this.sfx.coin.play();
+		//Check for player accuracy
+		var points = this._PrecisionCheck(LEFT, arrow_left);
 		//Increment player score
-		this.score++;
+		this.score += points;
 		//Kill the arrow
 		arrow_left.kill();	
 		//Verify that the user inputted the correct arrow
@@ -454,8 +564,10 @@ PlayState._onRightArrowVsCheckPoint = function(RIGHT, arrow_right) {
 	if(this.keys.right.isDown && this.leadingEdgeRight == true) {
 		//Play a correct input sound
 		this.sfx.coin.play();
+		//Check for player accuracy
+		var points = this._PrecisionCheck(RIGHT, arrow_right);
 		//Increment player score
-		this.score++;
+		this.score += points;
 		//Kill the arrow
 		arrow_right.kill();
 		//Verify that the user inputted the correct arrow
@@ -469,8 +581,10 @@ PlayState._onUpArrowVsCheckPoint = function(UP, arrow_up) {
 	if(this.keys.up.isDown && this.leadingEdgeUp == true) {
 		//Play a correct input sound
 		this.sfx.coin.play();
+		//Check for player accuracy
+		var points = this._PrecisionCheck(UP, arrow_up);
 		//Increment player score
-		this.score++;
+		this.score += points;
 		//Kill the arrow
 		arrow_up.kill();	
 		//Verify that the user inputted the correct arrow
@@ -484,8 +598,10 @@ PlayState._onDownArrowVsCheckPoint = function(DOWN, arrow_down) {
 	if(this.keys.down.isDown && this.leadingEdgeDown == true) {
 		//Play a correct input sound
 		this.sfx.coin.play();
+		//Check for player accuracy
+		var points = this._PrecisionCheck(DOWN, arrow_down);
 		//Increment player score
-		this.score++;
+		this.score += points;
 		//Kill the arrow
 		arrow_down.kill();	
 		//Verify that the user inputted the correct arrow
@@ -494,17 +610,37 @@ PlayState._onDownArrowVsCheckPoint = function(DOWN, arrow_down) {
 	}
 }
 
-
 /* --------------------------------------------------- */
 
-window.onload = function() {
-	// Create a new game window, AUTO checks to use WEBGL for graphics
-	let game = new Phaser.Game(960, 600, Phaser.AUTO, 'game');
-	//Add 'PlayState', an object describing the setup/state of the game, to the game; 'play' is the key
-	game.state.add('play', PlayState);
-	//Start the game
-	game.state.start('play');
+//Precision checking
+PlayState._PrecisionCheck = function(checkpoint, arrow) {
+	var checkpoint_y = checkpoint.y;
+	var arrow_y = arrow.y;
+	//Find distance between the checkpoint and the arrow at time of player input
 	
+	var distance = (Math.abs(checkpoint_y - arrow_y));
 	
+	//If distance is very close, create perfect indicator and return 10 points
+	if(distance < 10) {
+		this._createPerfectIndicator(checkpoint);
+		return 10;
+	}
+	//create good indicator, return 7 points
+	else if(distance < 25) {
+		this._createGoodIndicator(checkpoint);
+		return 7;
+	}
+	//create okay indicator, return 5 points
+	else if (distance < 40){
+		this._createOkayIndicator(checkpoint);
+		return 5;
+	}
+	//create poor indicator, return 1 point
+	else {
+		this._createPoorIndicator(checkpoint);
+		return 1;
+	}
 	
-};
+}
+
+/* --------------------------------------------------- */
