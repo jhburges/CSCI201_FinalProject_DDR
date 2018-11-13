@@ -1,0 +1,17 @@
+@charset "ISO-8859-1";
+
+#a {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 40px;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+#scoreslist {
+	width:80%;
+}
+
+body {
+	background-color: #42b5f7;
+}
