@@ -19,6 +19,12 @@ BootState.preload = function() {
 	this.game.load.audio('sfx:attention', 'audio/attention.mp3');
 	this.game.load.audio('sfx:now', 'audio/now.mp3');
 	this.game.load.audio('sfx:this_guy', 'audio/this_guy.mp3');
+	this.game.load.audio('sfx:love_is_true', 'audio/love_is_true.mp3');
+	this.game.load.audio('sfx:summer_summer_sweet', 'audio/summersummersweet.mp3');
+	this.game.load.audio('sfx:lay_it_down', 'audio/LayItDown.mp3');
+	this.game.load.audio('sfx:rollin', 'audio/rollin.mp3');
+	this.game.load.audio('sfx:in_my_feelings', 'audio/in_my_feelings.mp3');
+	this.game.load.audio('sfx:the_eve', 'audio/the_eve.mp3');
 	//Load a spritesheet of various assets (parameters = image key, file location, dimensions of individual frame)
 	this.game.load.spritesheet('coin', 'images/coin_animated.png', 22, 22);
 	this.game.load.spritesheet('poor', 'images/poor_spritesheet.png', 141, 45);
@@ -34,6 +40,12 @@ BootState.preload = function() {
 	this.game.load.spritesheet('full_moon_button', 'images/full_moon_spritesheet.png', 250, 45);
 	this.game.load.spritesheet('troublemaker_button', 'images/troublemaker_spritesheet.png', 290, 45);
 	this.game.load.spritesheet('now_button', 'images/now_spritesheet.png', 250, 45);
+	this.game.load.spritesheet('love_is_true_button', 'images/love_is_true_spritesheet.png', 290, 45);
+	this.game.load.spritesheet('summer_summer_sweet_button', 'images/summersummersweet_spritesheet.png', 290, 90);
+	this.game.load.spritesheet('lay_it_down_button', 'images/lay_it_down_spritesheet.png', 290, 45);
+	this.game.load.spritesheet('rollin_button', 'images/rollin_spritesheet.png', 250, 45);
+	this.game.load.spritesheet('in_my_feelings_button', 'images/in_my_feelings_spritesheet.png', 310, 45);
+	this.game.load.spritesheet('the_eve_button', 'images/the_eve_spritesheet.png', 250, 45);
 	//Load play button
 	this.game.load.image('play_button', 'images/play_button.png');
 	//Load coin icon and numbers for the scoreboard

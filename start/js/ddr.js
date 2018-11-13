@@ -121,7 +121,13 @@ PlayState.create = function() {
 		troublemaker: this.game.add.audio('sfx:troublemaker'),
 		attention: this.game.add.audio('sfx:attention'),
 		now: this.game.add.audio('sfx:now'),
-		this_guy: this.game.add.audio('sfx:this_guy')
+		this_guy: this.game.add.audio('sfx:this_guy'),
+		love_is_true: this.game.add.audio('sfx:love_is_true'),
+		summer_summer_sweet: this.game.add.audio('sfx:summer_summer_sweet'),
+		lay_it_down: this.game.add.audio('sfx:lay_it_down'),
+		rollin: this.game.add.audio('sfx:rollin'),
+		in_my_feelings: this.game.add.audio('sfx:in_my_feelings'),
+		the_eve: this.game.add.audio('sfx:the_eve')
 	};
 	
 	//Check which song should be played, then play it
@@ -140,6 +146,24 @@ PlayState.create = function() {
 	}
 	else if(this.game.global.songstring == 'now') {
 		curr_song = this.sfx.now;
+	}
+	else if(this.game.global.songstring == 'love_is_true') {
+		curr_song = this.sfx.love_is_true;
+	}
+	else if(this.game.global.songstring == 'summer_summer_sweet') {
+		curr_song = this.sfx.summer_summer_sweet;
+	}
+	else if(this.game.global.songstring == 'lay_it_down') {
+		curr_song = this.sfx.lay_it_down;
+	}
+	else if(this.game.global.songstring == 'rollin') {
+		curr_song = this.sfx.rollin;
+	}
+	else if(this.game.global.songstring == 'in_my_feelings') {
+		curr_song = this.sfx.in_my_feelings;
+	}
+	else if(this.game.global.songstring == 'the_eve') {
+		curr_song = this.sfx.the_eve;
 	}
 	curr_song.play();
 	
@@ -419,7 +443,7 @@ PlayState._removeFromDownGroup = function() {
 /* --------------------------------------------------- */
 PlayState._decrementScore = function() {
 	this.sfx.stomp.play();
-	this.score -= 5;
+	this.score -= 10;
 }
 /* --------------------------------------------------- */
 
