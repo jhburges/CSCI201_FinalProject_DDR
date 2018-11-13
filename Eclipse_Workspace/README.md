@@ -13,5 +13,7 @@ Eclipse_Workspace
 
 TODO:
 
-1. Redirecto to the Lobby after sign in
-2. Add functions to JDBCDriver to increase number of data structures used
+1. Add functions to JDBCDriver to increase number of data structures used
+2. Add links on highScores.jsp and index.html to other pages so user can navigate around the site.
+3. Put background on index.html ?
+4. make highScores.jsp prettier
