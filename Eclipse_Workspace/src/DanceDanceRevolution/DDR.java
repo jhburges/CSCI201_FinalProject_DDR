@@ -2,6 +2,9 @@ package DanceDanceRevolution;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -45,9 +48,17 @@ public class DDR extends HttpServlet {
 		JDBCDriver.updateHighScore(username, Integer.valueOf(score));
 	}
 	
-//	public ArrayList<Pair<String, Integer> > sortUserScores(ArrayList<Pair<String, Integer> > scores){
-//		
-//		
-//	}
+	public static ArrayList<Pair<String, Integer> > sortUserScores(ArrayList<Pair<String, Integer> > scores){
+		
+		Collections.sort(scores, new Comparator<Pair<String, Integer> >() {
+			@Override
+			public int compare(Pair<String, Integer> p1, Pair<String, Integer> p2) {
+				return p2.getValue().compareTo(p1.getValue());
+			}
+		});
+		
+		return scores;
+		
+	}
 
 }

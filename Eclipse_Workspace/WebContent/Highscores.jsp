@@ -14,9 +14,12 @@
 			
 		</style>
 		<%
+			// Pull usernames and scores from the db
 			java.util.ArrayList<javafx.util.Pair<String, Integer> > scores = new java.util.ArrayList();
 			scores = DanceDanceRevolution.JDBCDriver.getUserHighScores();
-			//Add function to sort scores here
+			
+			// sort the scores
+			scores = DanceDanceRevolution.DDR.sortUserScores(scores);
 		%>
 	</head>
 	<body>
