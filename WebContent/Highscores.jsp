@@ -13,15 +13,27 @@
 			}
 			
 		</style>
+		<%
+			java.util.ArrayList<javafx.util.Pair<String, Integer> > scores = new java.util.ArrayList();
+			scores = DanceDanceRevolution.JDBCDriver.getUserHighScores();
+			//Add function to sort scores here
+		%>
 	</head>
 	<body>
 			<h1>High Score</h1>
 			<table style="width:100%">
 			  <tr>
-			    <th>Song</th>
 			    <th>Username</th> 
-			    <th>Score</th>
+			    <th>High Score</th>
 			  </tr>
+			  <%
+			  for(javafx.util.Pair<String, Integer> score : scores){
+			  %>
+			      <td><%= score.getKey() %></td>
+			      <td><%= score.getValue() %></td>
+			  <%
+			  }
+			  %>
 			  
 			</table>
 	</body>
