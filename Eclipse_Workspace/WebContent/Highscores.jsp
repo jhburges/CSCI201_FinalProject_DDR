@@ -29,8 +29,10 @@
 			  <%
 			  for(javafx.util.Pair<String, Integer> score : scores){
 			  %>
+			      <tr>
 			      <td><%= score.getKey() %></td>
 			      <td><%= score.getValue() %></td>
+			      </tr>
 			  <%
 			  }
 			  %>
