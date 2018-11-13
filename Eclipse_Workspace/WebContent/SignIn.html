@@ -185,6 +185,8 @@
 			      <script>
 					function onSignIn(googleUser){
 						var profile = googleUser.getBasicProfile();
+						sessionStorage.setItem("username", profile.getName());
+						console.log(sessionStorage.getItem("username"));
 						var xhttp = new XMLHttpRequest();
 						xhttp.open("GET", "Authentication?name=" + profile.getName() + "&email=" + profile.getEmail(), true);
 					     sleep(250);
@@ -214,7 +216,7 @@
 		        <input type="password" name="password" placeholder="Password" required style="display:none;">
 		        <input type="submit" value="Play as Guest" style="display:none;">
 		        <br><br><br>
-		        <button type="button" class="guest btn" onclick="alert('next page')">Play as Guest</button>
+		        <a href = "guest.html"><button type="button" class="guest btn">Play as Guest</button></a>
 		      </div>
 		
 

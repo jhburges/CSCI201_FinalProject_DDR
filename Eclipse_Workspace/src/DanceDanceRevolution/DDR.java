@@ -1,6 +1,7 @@
 package DanceDanceRevolution;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -8,6 +9,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import javafx.util.Pair;
 
 /**
  * Servlet implementation class DDR
@@ -25,35 +28,26 @@ public class DDR extends HttpServlet {
     }
     
     public void init(ServletConfig config) throws ServletException {
-		System.out.println("In init");
+		System.out.println("In DDR init");
 	}
 	
 	/**
 	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("In service method");
+		System.out.println("In DDR service method");
 		
 		String score = request.getParameter("score");
 		String username = request.getParameter("username");
 		
-		System.out.println("Score: " + score + "\n\tUsername: " + username);
+		System.out.println("Score: " + score + "\nUsername: " + username);
+		
+		JDBCDriver.updateHighScore(username, Integer.valueOf(score));
 	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+	
+//	public ArrayList<Pair<String, Integer> > sortUserScores(ArrayList<Pair<String, Integer> > scores){
+//		
+//		
+//	}
 
 }

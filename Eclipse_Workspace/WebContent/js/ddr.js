@@ -102,6 +102,14 @@ PlayState.init = function() {
 
 /* --------------------------------------------------- */
 
+/**
+ * Delay for a number of milliseconds
+ */
+function sleep(delay) {
+  var start = new Date().getTime();
+  while (new Date().getTime() < start + delay);
+}
+
 
 /* --------------------------------------------------- */
 
@@ -121,7 +129,13 @@ PlayState.create = function() {
 		troublemaker: this.game.add.audio('sfx:troublemaker'),
 		attention: this.game.add.audio('sfx:attention'),
 		now: this.game.add.audio('sfx:now'),
-		this_guy: this.game.add.audio('sfx:this_guy')
+		this_guy: this.game.add.audio('sfx:this_guy'),
+		love_is_true: this.game.add.audio('sfx:love_is_true'),
+		summer_summer_sweet: this.game.add.audio('sfx:summer_summer_sweet'),
+		lay_it_down: this.game.add.audio('sfx:lay_it_down'),
+		rollin: this.game.add.audio('sfx:rollin'),
+		in_my_feelings: this.game.add.audio('sfx:in_my_feelings'),
+		the_eve: this.game.add.audio('sfx:the_eve')
 	};
 	
 	//Check which song should be played, then play it
@@ -141,6 +155,24 @@ PlayState.create = function() {
 	else if(this.game.global.songstring == 'now') {
 		curr_song = this.sfx.now;
 	}
+	else if(this.game.global.songstring == 'love_is_true') {
+		curr_song = this.sfx.love_is_true;
+	}
+	else if(this.game.global.songstring == 'summer_summer_sweet') {
+		curr_song = this.sfx.summer_summer_sweet;
+	}
+	else if(this.game.global.songstring == 'lay_it_down') {
+		curr_song = this.sfx.lay_it_down;
+	}
+	else if(this.game.global.songstring == 'rollin') {
+		curr_song = this.sfx.rollin;
+	}
+	else if(this.game.global.songstring == 'in_my_feelings') {
+		curr_song = this.sfx.in_my_feelings;
+	}
+	else if(this.game.global.songstring == 'the_eve') {
+		curr_song = this.sfx.the_eve;
+	}
 	curr_song.play();
 	
 	
@@ -152,19 +184,19 @@ PlayState.create = function() {
 	
 	//Code addresses the logic that happens after the song finishes
 	curr_song.onStop.addOnce(function() {
-
+		
+		//Updates the max_score variable if the current game score is greater
+		if(this.game.global.max_score < this.score) {
+			this.game.global.max_score = this.score;
+		}
+		/* --------------------------------------------------- */
+		//Put a function here that sends the score/max_score to the backend
+		/* --------------------------------------------------- */
 		var xhttp = new XMLHttpRequest();
-
-		xhttp.open("POST", "../DDR", true);
-
-		xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-		xhttp.send("score=" + this.score +
-				   "&username=" + "Jacob Burgess");
-			
-		/* --------------------------------------------------- */
-		//End inserted function
-		/* --------------------------------------------------- */
+		xhttp.open("GET", "DDR?username=" + sessionStorage.getItem("username") + "&score=" + this.score, true);
+	    sleep(250);
+	    xhttp.send();
+	    sleep(250);
 		
 		//Changes the game state to the menu state
 		this.game.state.start('menu');
@@ -424,7 +456,7 @@ PlayState._removeFromDownGroup = function() {
 /* --------------------------------------------------- */
 PlayState._decrementScore = function() {
 	this.sfx.stomp.play();
-	this.score -= 5;
+	this.score -= 10;
 }
 /* --------------------------------------------------- */
 
