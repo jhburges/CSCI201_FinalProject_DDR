@@ -4,7 +4,7 @@
 
 MenuState = {};
 MenuState.preload = function() {
-	this.game.add.image(0, 0, 'background_menu');
+	this.game.add.image(0, 0, 'ddr_background_menu');
 };
 
 
