@@ -7,17 +7,73 @@
 		<link rel="stylesheet" href="Lobby.css">
 		<script>
 		var socket;
+		var color = 0;
+
 			function connectToServer(){
 				socket = new WebSocket("ws://localhost:8080/CSCI201_WebSocket/ss");
+				var buffer;
 				socket.onopen = function(event){
-					document.getElementById("mychat").innerHTML += "Connected!<br />";
+					//document.getElementById("messages").innerHTML += "Connected!<br />";
+					//toggle(color);
+					var bgc; //grey
+					if(color == 0)
+					{
+						bgc = "#D3D3D3";
+						color = 1;
+					}
+					else
+					{
+					    bgc = "#A9A9A9";
+					    color = 0;
+					}
+					
+					buffer += "<div class=\"bubble1\" style = \"background-color: " + bgc + "\";>";
+					buffer += "<p style=\"font-size:10px;margin-left:10px;\">";
+					buffer += "<div id=\"mychat\">Connected!</div></p>";
+					buffer += "</div>";
+					document.getElementById("messages").innerHTML = buffer;					
+					
 				}
 				
 				socket.onmessage = function(event){
-					document.getElementById("mychat").innerHTML += event.data + "<br />";
+					//document.getElementById("messages").innerHTML += event.data + "<br />";
+										var bgc; //grey
+					if(color == 0)
+					{
+						bgc = "#D3D3D3";
+						color = 1;
+					}
+					else
+					{
+					    bgc = "#A9A9A9";
+					    color = 0;
+					}
+					
+					buffer += "<div class=\"bubble1\" style = \"background-color: " + bgc + "\";>";
+					buffer += "<p style=\"font-size:10px;margin-left:10px;\">"
+					buffer += "<div id=\"mychat\">" + event.data + "!</div></p>";
+					buffer += "</div>";
+					document.getElementById("messages").innerHTML = buffer;
 				}
 				socket.onclose = function(event){
-					document.getElementById("mychat").innerHTML += "Disconnected!<br />";
+					var bgc; //grey
+					if(color == 0)
+					{
+						bgc = "#D3D3D3";
+						color = 1;
+					}
+					else
+					{
+					    bgc = "#A9A9A9";
+					    color = 0;
+					}
+					
+					//document.getElementById("messages").innerHTML += "Disconnected!<br />";
+					buffer += "<div class=\"bubble1\" style = \"background-color: " + bgc + "\";>";
+					buffer += "<p style=\"font-size:10px;margin-left:10px;\">"
+					buffer += "<div id=\"mychat\">Disconnected!</div></p>";
+					buffer += "</div>";
+					document.getElementById("messages").innerHTML = buffer;
 				}
 			}
 			
@@ -38,21 +94,9 @@
 			</div>
 
 			<br />
-			<div id="messages">
-				<div class="bubble1">
-				<p style="font-size:10px;margin-left:10px;"><div id="mychat"></div></p>
-				</div>
+			<div id="messages"> </div>
 			
-			<% 
-			    
-				// when a new message comes in
-				// <div class="bubble1"> or <div class="bubble2"> (alternate)
-				// <p style="font-size:10px;margin-left:10px;"><username from db></p>
-				  // <p><Message></p>
-				  // <div class="time">System.currentTimeMillis()</div>
-				// </div>
-			%>
-			</div>
+			
 			<div id="footer">		<form name="chatform" onsubmit="return sendMessage();">
 		<input id="messageInput" type="text" name="message" value="Type Here" />
 		<input type="submit" name="submit" value="Send Message" />
