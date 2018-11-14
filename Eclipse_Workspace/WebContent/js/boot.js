@@ -9,7 +9,9 @@ BootState.preload = function() {
 	this.game.load.json('level:1', 'data/ddr.json');
 	//Load background image for storage
 	this.game.load.image('background', 'images/background.png');
+	this.game.load.image('ddr_background', 'images/ddr.jpg');
 	this.game.load.image('background_menu', 'images/background_menu.png');
+	this.game.load.image('ddr_background_menu', 'images/ddr_menu.jpg');
 	//Load audio assets
 	this.game.load.audio('sfx:jump', 'audio/jump.wav');
 	this.game.load.audio('sfx:coin', 'audio/coin.wav');
