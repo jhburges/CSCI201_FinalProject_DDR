@@ -14,6 +14,9 @@ Eclipse_Workspace
 TODO:
 
 1. Add functions to JDBCDriver to increase number of data structures used
-2. Add links on highScores.jsp and index.html to other pages so user can navigate around the site.
-3. Put background on index.html ?
-4. make highScores.jsp prettier
+2. Add links on highScores.jsp --> 'Play Game', 'Lobby'
+3. Add links on index.html --> 'Lobby' 'Highscores'
+4. Add links on Lobby.jsp --> Google button for sign out.
+4. Put background on index.html ?
+5. make pages prettier
+6. Game --> dont let people go below 0, or have them fail the song when they reach 0
