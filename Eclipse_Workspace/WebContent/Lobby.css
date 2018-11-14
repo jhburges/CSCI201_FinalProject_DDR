@@ -8,7 +8,7 @@
 }
 
 body {
-	background-color: #42b5f7;
+	/* background: 'images/ddr.jpg'; */
 }
 
 .central {
@@ -24,7 +24,7 @@ body {
 	width: 80%;
 	height: 500px;
 	overflow-y: auto;
-	color: transparent;
+	/* color: transparent; */
 }
 
 .bubble1 {

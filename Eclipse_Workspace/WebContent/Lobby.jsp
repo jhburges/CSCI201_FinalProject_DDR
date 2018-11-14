@@ -84,7 +84,7 @@
 			}
 		</script>
 	</head>
-	<body onload="connectToServer()">
+	<body onload="connectToServer()" background="images/ddr.jpg">
 		<div id="lobby">
 			<div id="header">
 				Welcome to the Lobby!
