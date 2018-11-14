@@ -90,7 +90,7 @@
 				Welcome to the Lobby!
 			</div>
 			<div style="text-align: center; padding: 10px">
-				<span style=" font-size: 40px; color:white;" onClick="location.href='index.jsp'">Play</span>
+				<span style=" font-size: 40px; color:white;" onClick="location.href='index.html'">Play</span>
 				<span style=" font-size: 40px; margin-left:60px;color:white;" onClick="location.href='Highscores.jsp'">High Scores</span>
 			</div>
 
