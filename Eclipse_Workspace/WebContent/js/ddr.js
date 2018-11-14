@@ -116,7 +116,7 @@ function sleep(delay) {
 //Create game entities and set up world
 PlayState.create = function() {
 	//Add an image object into game: parameters = x-coord, y-coord, key to an asset
-	this.game.add.image(0, 0, 'background');
+	this.game.add.image(0, 0, 'ddr_background');
 	
 	//Level-loading function: parameter = json file describing the level objects
 	this._loadLevel(this.game.cache.getJSON('level:1'));
