@@ -1,4 +1,4 @@
-package csci201;
+package DanceDanceRevolution;
 
 import java.io.IOException;
 import java.util.Vector;

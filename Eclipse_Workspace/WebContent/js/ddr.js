@@ -457,6 +457,9 @@ PlayState._removeFromDownGroup = function() {
 PlayState._decrementScore = function() {
 	this.sfx.stomp.play();
 	this.score -= 10;
+	if(this.score <= 0) {
+		this.score = 0;
+	}
 }
 /* --------------------------------------------------- */
 
