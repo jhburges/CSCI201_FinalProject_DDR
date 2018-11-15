@@ -193,7 +193,7 @@ PlayState.create = function() {
 		//Put a function here that sends the score/max_score to the backend
 		/* --------------------------------------------------- */
 		var xhttp = new XMLHttpRequest();
-		xhttp.open("GET", "DDR?username=" + sessionStorage.getItem("username") + "&score=" + this.score, true);
+		xhttp.open("GET", "http://192.168.43.41:8080/PleaseWork/DDR?username=" + sessionStorage.getItem("username") + "&score=" + this.score, true);
 	    sleep(250);
 	    xhttp.send();
 	    sleep(250);

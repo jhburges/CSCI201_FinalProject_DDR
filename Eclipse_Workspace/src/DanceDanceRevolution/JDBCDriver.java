@@ -23,7 +23,7 @@ public class JDBCDriver {
 	public static void connect(){
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://" + ipAddress + ":3306/CSCI201_DDR?user=" + sqlUsername + "&password=" + sqlPassword + "&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
+			conn = DriverManager.getConnection("jdbc:mysql://" + ipAddress + ":3306/CSCI201_DDR?user=" + sqlUsername + "&password=" + sqlPassword + "&useSSL=false&allowPublicKeyRetrieval=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
 		} catch (ClassNotFoundException e) {
 			System.out.println("JDBCDriver.connect(): CNFE: "); 
 			e.printStackTrace();

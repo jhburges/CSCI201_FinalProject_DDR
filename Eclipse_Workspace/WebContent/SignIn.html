@@ -188,7 +188,7 @@
 						sessionStorage.setItem("username", profile.getName());
 						console.log(sessionStorage.getItem("username"));
 						var xhttp = new XMLHttpRequest();
-						xhttp.open("GET", "Authentication?name=" + profile.getName() + "&email=" + profile.getEmail(), true);
+						xhttp.open("GET", "http://192.168.43.41:8080/PleaseWork/Authentication?name=" + profile.getName() + "&email=" + profile.getEmail(), true);
 					     sleep(250);
 					     xhttp.send();
 					     sleep(250);

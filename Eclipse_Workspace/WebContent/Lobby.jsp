@@ -12,7 +12,7 @@
 		var color = 0;
 
 			function connectToServer(){
-				socket = new WebSocket("ws://localhost:8080/FinalProject/ss");
+				socket = new WebSocket("ws://192.168.43.41:8080/PleaseWork/ss");
 				var buffer;
 				socket.onopen = function(event){
 					//document.getElementById("messages").innerHTML += "Connected!<br />";
