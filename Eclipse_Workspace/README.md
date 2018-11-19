@@ -11,12 +11,22 @@ Eclipse_Workspace
 
 5. Within Eclipse run 'SignIn.html' on your TomCat swerver.
 
-TODO:
-
-1. Add functions to JDBCDriver to increase number of data structures used
-2. Add links on highScores.jsp --> 'Play Game', 'Lobby'
-3. Add links on index.html --> 'Lobby' 'Highscores'
-4. Add links on Lobby.jsp --> Google button for sign out.
-4. Put background on index.html ?
-5. make pages prettier
-6. Game --> dont let people go below 0, or have them fail the song when they reach 0
+WHAT WORKS:
+ - The Sign In page display
+ - Google sign in functionality
+ - Play as Guest
+ 
+ - The Logged In page display
+ - The High Scores page (assuming mySQL was set up correctly)
+ - The chat room (when connected to the same router who's IP is correctly placed in the code)
+ - The play game button
+ 
+ - The game menu: difficulty and song selection
+ - Back to lobby button
+ - The game itself: registering arrow inputs, outputting how accurate the user was, adding up points
+ - Updating database once the game is finished
+ 
+ WHAT DOESNT WORK:
+ 
+ - The other sign in buttons on the home page
+ - Updating the database on one player's computer after another player has finished playing
